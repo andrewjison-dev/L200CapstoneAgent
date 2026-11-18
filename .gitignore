@@ -1,0 +1,32 @@
+# Secrets & Environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+service-account*.json
+
+# Python Bytecode & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local Isolated Databases & Telemetry Artifacts
+.concierge_state/
+*.db
+*.sqlite
+*.sqlite3
+
+# Terraform State
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars

@@ -1,0 +1,52 @@
+{
+  "eval_set_id": "andrew_family_concierge_adk_evalset",
+  "name": "Andrew Family Meal Command Center Evaluation Set",
+  "description": "ADK CLI (`adk eval`) golden evaluation trajectories verifying intake-first protocol, schedule constraints, allergen safety, and HITL gates.",
+  "eval_cases": [
+    {
+      "eval_id": "case_intake_gate_first",
+      "conversation": [
+        {
+          "invocation_id": "inv-1",
+          "user_content": {
+            "role": "user",
+            "parts": [{"text": "Help me plan meals for next week starting 2026-11-23."}]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {"name": "fetch_family_dietary_profile_and_schedule", "args": {}},
+              {"name": "collect_weekly_blocker_inputs_for_andrew", "args": {"week_start_date": "2026-11-23"}}
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [{"text": "Quick 60-Second Sunday Check-In for Andrew before I orchestrate your week"}]
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "case_orchestrate_with_defaults",
+      "conversation": [
+        {
+          "invocation_id": "inv-2",
+          "user_content": {
+            "role": "user",
+            "parts": [{"text": "Use my standard defaults for 2026-11-23 and orchestrate my week."}]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {"name": "collect_weekly_blocker_inputs_for_andrew", "args": {"week_start_date": "2026-11-23", "use_standard_defaults": true}},
+              {"name": "generate_weekly_meal_and_prep_schedule", "args": {"week_start_date": "2026-11-23"}},
+              {"name": "consolidate_aisle_sorted_grocery_list", "args": {}}
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [{"text": "PENDING_HUMAN_APPROVAL"}]
+          }
+        }
+      ]
+    }
+  ]
+}

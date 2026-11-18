@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrew's Family Meal Command Center</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <span class="eyebrow">PERSONAL CONCIERGE • ISOLATED MODE</span>
+        <h1>Family Meal &amp; Wellness Command Center</h1>
+        <p class="subtitle">Built around Andrew's rhythm: <strong>5–6 AM CST Workout</strong> → <strong>Family Breakfast</strong> → <strong>8 AM–5 PM Work</strong> → <strong>&le;25m Dinner &amp; Core Memories</strong></p>
+      </div>
+      <div class="status-badges">
+        <span class="pill pill-safe" id="allergen-badge">Nut-Free Household Guardrail Active</span>
+        <span class="pill pill-eval" id="self-eval-badge">Self-Eval: Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Step Navigation -->
+    <nav class="step-nav" aria-label="Command Center Workflow">
+      <button class="step-tab active" data-tab="tab-checkin">1. Quick Weekly Check-In</button>
+      <button class="step-tab" data-tab="tab-plan">2. 7-Day Plan &amp; Sunday Prep</button>
+      <button class="step-tab" data-tab="tab-grocery">3. Smart Aisle Cart <span class="badge-dot" id="cart-dot" hidden></span></button>
+      <button class="step-tab" data-tab="tab-cook">4. 25-Min Cook Mode</button>
+    </nav>
+
+    <!-- STEP 1: SURFACE INPUTS NEEDED FROM ANDREW BEFORE PLANNING -->
+    <section id="tab-checkin" class="panel active">
+      <div class="card hero-card">
+        <div class="card-header-row">
+          <div>
+            <h2>60-Second Sunday Check-In</h2>
+            <p class="muted">Confirm any schedule shifts or cravings below before your multi-agent team researches, plans, and builds your cart.</p>
+          </div>
+          <button id="btn-quick-defaults" class="btn btn-secondary" type="button">Use My Saved Defaults &amp; Orchestrate</button>
+        </div>
+
+        <form id="checkin-form" class="checkin-grid">
+          <div class="field">
+            <label for="week-start">Week Starting (Monday)</label>
+            <input type="date" id="week-start" value="2026-11-23" required />
+          </div>
+
+          <div class="field">
+            <label for="sunday-prep">Sunday Batch-Prep Window</label>
+            <select id="sunday-prep">
+              <option value="75" selected>75 mins (Recommended — cuts weeknight cooking in half)</option>
+              <option value="45">45 mins (Light prep)</option>
+              <option value="90">90 mins (Full prep)</option>
+              <option value="0">0 mins (No Sunday prep this week)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="workout-focus">5:00–6:00 AM CST Workout Focus</label>
+            <select id="workout-focus">
+              <option value="balanced_strength_and_wellness" selected>Balanced Strength &amp; Recovery (&ge;34g protein breakfast)</option>
+              <option value="strength_hypertrophy">Heavy Lifting / High Protein</option>
+              <option value="endurance_cardio">Endurance &amp; Clean Carbs</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="budget-usd">Weekly Grocery Budget Ceiling ($ USD)</label>
+            <input type="number" id="budget-usd" min="75" max="600" step="5" value="225" />
+          </div>
+
+          <div class="field field-wide">
+            <label>Any Busy / Late Nights Past 5:00 PM? <span class="hint">(Schedules 15-min skillet dinners automatically)</span></label>
+            <div class="day-chips" id="late-days-group">
+              <button type="button" class="chip" data-day="Monday">Mon</button>
+              <button type="button" class="chip" data-day="Tuesday">Tue</button>
+              <button type="button" class="chip active" data-day="Wednesday">Wed</button>
+              <button type="button" class="chip" data-day="Thursday">Thu</button>
+              <button type="button" class="chip" data-day="Friday">Fri</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="fridge-items">Use-Up Fridge / Pantry Items First</label>
+            <input type="text" id="fridge-items" placeholder="e.g., broccoli, zucchini, spinach" value="broccoli, spinach" />
+          </div>
+
+          <div class="field">
+            <label for="family-cravings">Spouse or Kids' Cravings / Notes</label>
+            <input type="text" id="family-cravings" placeholder="e.g., salmon bites, tacos, pizza friday" value="salmon, pizza" />
+          </div>
+
+          <div class="form-actions field-wide">
+            <button type="submit" id="btn-orchestrate" class="btn btn-primary btn-large">
+              Orchestrate My Week (Research → Plan → Grocery Cart → Cook Cards)
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Pantry Staples Already On Hand <span class="hint">(Auto-deducted from cart)</span></h3>
+          <div id="pantry-pills" class="tag-list"></div>
+        </div>
+        <div class="card">
+          <h3>Remembered Family Preferences <span class="hint">(Vector Memory)</span></h3>
+          <ul id="memory-list" class="clean-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: 7-DAY SCHEDULE & SUNDAY BATCH PREP -->
+    <section id="tab-plan" class="panel">
+      <div id="plan-empty" class="card empty-state">
+        <h3>No Week Orchestrated Yet</h3>
+        <p>Complete your 60-Second Check-In on Step 1 to generate your 7-day schedule and Sunday prep checklist.</p>
+      </div>
+
+      <div id="plan-content" hidden>
+        <div class="metrics-bar" id="plan-metrics"></div>
+
+        <div class="card prep-card">
+          <div class="card-header-row">
+            <div>
+              <h3>Sunday Batch-Prep Gameplan</h3>
+              <p class="muted">Knock these out once so 6:00 AM breakfasts take 6 minutes and 5:15 PM dinners stay effortless.</p>
+            </div>
+          </div>
+          <div id="sunday-prep-list" class="checklist"></div>
+        </div>
+
+        <h3 class="section-heading">7-Day Family Rhythm &amp; Meals</h3>
+        <div id="daily-grid" class="daily-grid"></div>
+      </div>
+    </section>
+
+    <!-- STEP 3: AISLE-SORTED GROCERY CART + HUMAN-IN-THE-LOOP GATE -->
+    <section id="tab-grocery" class="panel">
+      <div id="grocery-empty" class="card empty-state">
+        <h3>Grocery Cart Waiting on Weekly Plan</h3>
+        <p>Orchestrate your week first to consolidate ingredients across all 21 family meals.</p>
+      </div>
+
+      <div id="grocery-content" hidden>
+        <div class="card hitl-banner" id="hitl-card">
+          <div>
+            <span class="eyebrow">HUMAN-IN-THE-LOOP CONFIRMATION GATE</span>
+            <h3 id="hitl-title">Awaiting Andrew's Approval Before Order Dispatch</h3>
+            <p id="hitl-desc" class="muted"></p>
+          </div>
+          <div class="hitl-controls">
+            <select id="pickup-slot">
+              <option value="Sunday 07:30-08:30 CST Curbside Pickup">Sunday 7:30–8:30 AM CST Curbside</option>
+              <option value="Sunday 13:00-14:00 CST Home Delivery">Sunday 1:00–2:00 PM CST Delivery</option>
+              <option value="Monday 17:00 CST Express Pickup">Monday 5:00 PM CST Express</option>
+            </select>
+            <button id="btn-approve-cart" class="btn btn-approve" type="button">Approve &amp; Dispatch Order</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Skipped Because Already in Pantry</h3>
+          <div id="skipped-pantry-list" class="tag-list"></div>
+        </div>
+
+        <div id="aisle-container" class="aisle-grid"></div>
+      </div>
+    </section>
+
+    <!-- STEP 4: ZERO-STRESS 25-MIN COOK MODE -->
+    <section id="tab-cook" class="panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div>
+            <span class="eyebrow">DISTRACTION-FREE EXECUTION</span>
+            <h2 id="cook-title">Select Any Meal to Launch Cook Mode</h2>
+            <p id="cook-subtitle" class="muted">Parallelized timers + mild kid-portion split reminders so evenings stay calm.</p>
+          </div>
+          <div class="cook-picker-wrap">
+            <label for="cook-recipe-select">Switch Meal:</label>
+            <select id="cook-recipe-select"></select>
+          </div>
+        </div>
+
+        <div id="cook-steps-list" class="cook-steps"></div>
+
+        <div class="feedback-box">
+          <h4>3-Second Post-Dinner Memory Check-In <span class="hint">(Saved asynchronously in background)</span></h4>
+          <div class="feedback-row">
+            <label>Andrew Rating:
+              <select id="fb-andrew"><option value="5" selected>5 ★ Loved it</option><option value="4">4 ★ Solid</option><option value="3">3 ★ Okay</option><option value="2">2 ★ Skip</option></select>
+            </label>
+            <label>Spouse Rating:
+              <select id="fb-spouse"><option value="5" selected>5 ★ Loved it</option><option value="4">4 ★ Solid</option><option value="3">3 ★ Okay</option><option value="2">2 ★ Skip</option></select>
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" id="fb-kids" checked /> Both kids ate cleanly
+            </label>
+            <input type="text" id="fb-notes" placeholder="Optional note (e.g. extra broccoli next time)" />
+            <button id="btn-save-feedback" class="btn btn-secondary" type="button">Save to Memory</button>
+          </div>
+          <p id="fb-status" class="tiny-status"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLAPSIBLE AGENTOPS TELEMETRY DRAWER FOR EVALUATORS -->
+    <details class="telemetry-drawer" id="telemetry-drawer">
+      <summary>AgentOps Live Observability (Model Routing • OpenTelemetry Spans • Intent/Outcome Audit • PII Redaction)</summary>
+      <div class="telemetry-body">
+        <button id="btn-refresh-telemetry" class="btn btn-secondary btn-sm" type="button">Refresh Telemetry</button>
+        <pre id="telemetry-json">Click "Refresh Telemetry" or orchestrate a week to view live spans and audit logs.</pre>
+      </div>
+    </details>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="/app.js"></script>
+</body>
+</html>
